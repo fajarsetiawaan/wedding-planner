@@ -1,0 +1,168 @@
+You are a world-class product designer, UX architect, and startup CTO.
+
+Build a comprehensive mobile-first wedding planner super app called "EverAfter".
+
+This app must cover 3 main phases:
+1. Pre-Wedding
+2. Wedding Day
+3. Post-Wedding (After Marriage Support)
+
+Target Users:
+- Engaged couples (Primary)
+- Wedding vendors (Secondary)
+- Families (Optional read-only access)
+
+App Type:
+- Mobile Apps (iOS & Android)
+- Multi-user role system
+- Modern, premium luxury UI (like fintech apps)
+- Clean dashboard-based navigation
+
+Main Goal:
+Help couples plan, execute, and manage wedding preparation with zero stress, full transparency, budgeting control, vendor coordination, and emotional support.
+
+Design Style:
+- Premium Luxury
+- Soft cream + gold accent
+- Elegant serif headline font
+- Clean fintech-style dashboard
+- Glassmorphism for cards
+- Minimalistic icon set
+- Smooth animation micro-interactions
+
+---
+
+CORE FEATURES STRUCTURE:
+
+=== PHASE 1: PRE-WEDDING ===
+
+1. Wedding Vision Board
+- Moodboard upload
+- Pinterest-style inspiration board
+- Theme selector
+- AI theme recommendation
+
+2. Budget Planner
+- Total budget input
+- Auto budget allocation suggestion
+- Category breakdown (venue, catering, decoration, etc.)
+- Budget vs actual tracking
+- Financial forecast
+
+3. Vendor Marketplace
+- Search vendors by category
+- Rating & review
+- Direct chat
+- Contract upload
+- Payment milestone tracking
+
+4. Guest Management
+- Guest list import (Excel/Manual)
+- RSVP digital invitation link
+- Seating arrangement planner (drag & drop)
+- Guest attendance tracker
+
+5. Timeline Planner
+- Countdown timer
+- Task checklist
+- Automated reminders
+- Calendar integration
+
+6. Document Organizer
+- Store contracts
+- ID document checklist
+- Marriage license tracking
+
+---
+
+=== PHASE 2: WEDDING DAY ===
+
+1. Live Coordination Dashboard
+- Real-time checklist
+- Vendor arrival confirmation
+- Timeline tracker
+
+2. Expense Tracker (Live Mode)
+- Input emergency expenses
+- Cashflow summary
+
+3. Family Coordination Access
+- Read-only access for parents
+- Live event progress monitor
+
+4. Event Run-Down View
+- Hour by hour breakdown
+- Master of Ceremony notes
+
+---
+
+=== PHASE 3: POST-WEDDING ===
+
+1. Gift Tracker
+- Who gave what
+- Thank-you reminder system
+
+2. Marriage Financial Starter Kit
+- Joint budget planner
+- Savings goals
+- Honeymoon budget
+
+3. Photo & Video Organizer
+- Vendor gallery upload
+- Download link manager
+
+4. Legal & Administration Reminder
+- Change of ID reminder
+- Bank account update checklist
+
+5. Marriage Journey Planner
+- First year milestones
+- Anniversary reminder
+- Relationship health check-ins
+
+---
+
+USER ROLES:
+
+1. Couple Admin (Full Access)
+2. Partner (Full Access)
+3. Family (Read Only)
+4. Vendor (Limited Dashboard)
+
+---
+
+MONETIZATION:
+
+- Freemium model
+- Premium unlock:
+  - Unlimited guests
+  - AI wedding consultant
+  - Premium themes
+  - Advanced budgeting analytics
+  - Vendor priority placement
+
+---
+
+TECH STRUCTURE:
+
+- Supabase backend
+- Role-based authentication
+- Real-time database
+- Secure document storage
+- Payment integration (Stripe-ready)
+- Cloud file upload
+
+---
+
+DELIVERABLE REQUIRED:
+
+1. Complete PRD
+2. User Flow Diagram
+3. Database Schema
+4. Wireframe description per screen
+5. Dashboard layout structure
+6. Monetization model breakdown
+7. MVP scope definition
+8. Expansion roadmap (12 months)
+
+Make it scalable, modular, and startup-investor ready.
