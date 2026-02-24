@@ -69,6 +69,8 @@ interface WeddingContextValue {
   deleteGift: (id: string) => void;
   isLoading: boolean;
   isSetup: boolean;
+  weddingId: string | null;
+  setWeddingId: (id: string | null) => void;
 }
 
 const WeddingContext = createContext<WeddingContextValue | null>(null);
@@ -79,6 +81,7 @@ const STORAGE_KEYS = {
   guests: '@everafter_guests',
   tasks: '@everafter_tasks',
   gifts: '@everafter_gifts',
+  weddingId: '@everafter_wedding_id',
 };
 
 const DEFAULT_SETTINGS: WeddingSettings = {
@@ -119,6 +122,7 @@ export function WeddingProvider({ children }: { children: ReactNode }) {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [tasks, setTasks] = useState<Task[]>(DEFAULT_TASKS);
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const [weddingId, setWeddingIdState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -127,18 +131,20 @@ export function WeddingProvider({ children }: { children: ReactNode }) {
 
   const loadData = async () => {
     try {
-      const [s, b, g, t, gi] = await Promise.all([
+      const [s, b, g, t, gi, wid] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.settings),
         AsyncStorage.getItem(STORAGE_KEYS.budget),
         AsyncStorage.getItem(STORAGE_KEYS.guests),
         AsyncStorage.getItem(STORAGE_KEYS.tasks),
         AsyncStorage.getItem(STORAGE_KEYS.gifts),
+        AsyncStorage.getItem(STORAGE_KEYS.weddingId),
       ]);
       if (s) setSettings(JSON.parse(s));
       if (b) setBudgetCategories(JSON.parse(b));
       if (g) setGuests(JSON.parse(g));
       if (t) setTasks(JSON.parse(t));
       if (gi) setGifts(JSON.parse(gi));
+      if (wid) setWeddingIdState(JSON.parse(wid));
     } catch (e) {
       console.error('Failed to load data:', e);
     } finally {
@@ -153,6 +159,11 @@ export function WeddingProvider({ children }: { children: ReactNode }) {
       console.error('Failed to save:', e);
     }
   };
+
+  const setWeddingId = useCallback((id: string | null) => {
+    setWeddingIdState(id);
+    save(STORAGE_KEYS.weddingId, id);
+  }, []);
 
   const updateSettings = useCallback((partial: Partial<WeddingSettings>) => {
     setSettings(prev => {
@@ -281,7 +292,9 @@ export function WeddingProvider({ children }: { children: ReactNode }) {
     deleteGift,
     isLoading,
     isSetup,
-  }), [settings, budgetCategories, guests, tasks, gifts, isLoading, isSetup, updateSettings, addBudgetCategory, updateBudgetCategory, deleteBudgetCategory, addGuest, updateGuest, deleteGuest, addTask, updateTask, deleteTask, addGift, updateGift, deleteGift]);
+    weddingId,
+    setWeddingId,
+  }), [settings, budgetCategories, guests, tasks, gifts, isLoading, isSetup, weddingId, updateSettings, addBudgetCategory, updateBudgetCategory, deleteBudgetCategory, addGuest, updateGuest, deleteGuest, addTask, updateTask, deleteTask, addGift, updateGift, deleteGift, setWeddingId]);
 
   return (
     <WeddingContext.Provider value={value}>
