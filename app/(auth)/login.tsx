@@ -9,11 +9,14 @@ import {
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useWedding } from "@/lib/wedding-context";
+import Colors from "@/constants/colors";
 
 export default function LoginScreen() {
     const router = useRouter();
     const { setWeddingId } = useWedding();
+    const insets = useSafeAreaInsets();
 
     const handleBypassLogin = () => {
         // For now, we are bypassing actual authentication
@@ -33,7 +36,7 @@ export default function LoginScreen() {
             >
                 <LinearGradient
                     colors={["transparent", "rgba(0,0,0,0.6)", "rgba(0,0,0,0.9)"]}
-                    style={styles.gradient}
+                    style={[styles.gradient, { paddingBottom: Math.max(insets.bottom + 24, 48) }]}
                 >
                     <View style={styles.content}>
                         <View style={styles.headerContainer}>
@@ -51,7 +54,7 @@ export default function LoginScreen() {
                                 <Feather
                                     name="mail"
                                     size={20}
-                                    color="#2D3748"
+                                    color={Colors.charcoal}
                                     style={styles.buttonIcon}
                                 />
                                 <Text style={styles.primaryButtonText}>
@@ -95,7 +98,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-end",
         paddingHorizontal: 24,
-        paddingBottom: 48,
     },
     content: {
         width: "100%",
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
     primaryButtonText: {
         fontFamily: "Lora_600SemiBold",
         fontSize: 16,
-        color: "#2D3748",
+        color: Colors.charcoal,
     },
     buttonIcon: {
         marginRight: 12,

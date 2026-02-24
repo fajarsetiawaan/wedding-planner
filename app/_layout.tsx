@@ -4,6 +4,8 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View, Platform, StyleSheet } from "react-native";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { queryClient } from "@/lib/query-client";
 import { WeddingProvider, useWedding } from "@/lib/wedding-context";
@@ -75,17 +77,37 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <KeyboardProvider>
-            <WeddingProvider>
-              <StatusBar style="dark" />
-              <RootLayoutNav />
-            </WeddingProvider>
-          </KeyboardProvider>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <SafeAreaProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <GestureHandlerRootView style={styles.gestureRoot}>
+            <View style={styles.maxWidthContainer}>
+              <KeyboardProvider>
+                <WeddingProvider>
+                  <StatusBar style="dark" />
+                  <RootLayoutNav />
+                </WeddingProvider>
+              </KeyboardProvider>
+            </View>
+          </GestureHandlerRootView>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  gestureRoot: {
+    flex: 1,
+    backgroundColor: '#F3F4F6', // Subtle gray background for desktop/web bounds
+  },
+  maxWidthContainer: {
+    flex: 1,
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 480 : '100%',
+    alignSelf: 'center',
+    backgroundColor: '#000', // Matches app base bg (Splash is #000 temporarily during load)
+    overflow: 'hidden',
+    boxShadow: Platform.OS === 'web' ? '0px 0px 20px rgba(0,0,0,0.1)' : 'none',
+  },
+});

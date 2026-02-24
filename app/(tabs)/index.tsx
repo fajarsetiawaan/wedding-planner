@@ -9,6 +9,7 @@ import {
   Modal,
   Platform,
   Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,7 +54,7 @@ function QuickStatCard({ icon, label, value, color }: { icon: string; label: str
 
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
-  const { settings, updateSettings, budgetCategories, guests, tasks, gifts, isLoading, isSetup } = useWedding();
+  const { setWeddingId, settings, updateSettings, budgetCategories, guests, tasks, gifts, isLoading, isSetup } = useWedding();
   const [showSetup, setShowSetup] = useState(false);
   const [name1, setName1] = useState('');
   const [name2, setName2] = useState('');
@@ -127,7 +128,11 @@ export default function DashboardScreen() {
     <View style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.scrollContent, { paddingTop: topInset + 16, paddingBottom: Platform.OS === 'web' ? 84 : 100 }]}
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: topInset + 16, paddingBottom: Platform.OS === 'web' ? 84 : 100 }
+        ]}
       >
         <Animated.View entering={Platform.OS !== 'web' ? FadeInDown.delay(100).duration(600) : undefined}>
           <View style={styles.headerRow}>
@@ -138,17 +143,28 @@ export default function DashboardScreen() {
               <Text style={styles.subtitle}>Your wedding journey</Text>
             </View>
             {isSetup && (
-              <Pressable
-                onPress={() => {
-                  setName1(settings.partner1Name);
-                  setName2(settings.partner2Name);
-                  setDateStr(settings.weddingDate);
-                  setBudgetStr(settings.totalBudget.toString());
-                  setShowSetup(true);
-                }}
-              >
-                <Ionicons name="settings-outline" size={22} color={Colors.warmGray} />
-              </Pressable>
+              <View style={styles.headerActions}>
+                <Pressable
+                  style={styles.headerIconButton}
+                  onPress={() => {
+                    setWeddingId(null);
+                  }}
+                >
+                  <Ionicons name="log-out-outline" size={22} color={Colors.roseDark} />
+                </Pressable>
+                <Pressable
+                  style={styles.headerIconButton}
+                  onPress={() => {
+                    setName1(settings.partner1Name);
+                    setName2(settings.partner2Name);
+                    setDateStr(settings.weddingDate);
+                    setBudgetStr(settings.totalBudget.toString());
+                    setShowSetup(true);
+                  }}
+                >
+                  <Ionicons name="settings-outline" size={22} color={Colors.warmGray} />
+                </Pressable>
+              </View>
             )}
           </View>
         </Animated.View>
@@ -302,7 +318,10 @@ export default function DashboardScreen() {
       </ScrollView>
 
       <Modal visible={showSetup} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
           <View style={[styles.modalContent, { paddingBottom: Platform.OS === 'web' ? 34 : insets.bottom + 16 }]}>
             <View style={styles.modalHandle} />
             <Text style={styles.modalTitle}>
@@ -377,7 +396,7 @@ export default function DashboardScreen() {
               </Pressable>
             )}
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -399,8 +418,16 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center', // Changed to center to align the buttons vertically with the text
     marginBottom: 20,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  headerIconButton: {
+    padding: 4,
   },
   greeting: {
     fontFamily: 'PlayfairDisplay_600SemiBold',

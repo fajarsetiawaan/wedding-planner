@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "expo-router";
+import Colors from "@/constants/colors";
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -48,7 +49,7 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FDF8F5", // Pastel rose/blush background
+        backgroundColor: Colors.cream, // Pastel rose/blush background
         justifyContent: "center",
         alignItems: "center",
     },
@@ -62,12 +63,12 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: "PlayfairDisplay_600SemiBold",
         fontSize: 36,
-        color: "#2D3748",
+        color: Colors.charcoal,
         marginBottom: 8,
     },
     subtitle: {
         fontFamily: "Lora_400Regular",
         fontSize: 16,
-        color: "#718096",
+        color: Colors.warmGray,
     },
 });

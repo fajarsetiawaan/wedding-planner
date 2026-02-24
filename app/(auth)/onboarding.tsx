@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, {
-    useAnimatedStyle,
     useSharedValue,
     withTiming,
     FadeInDown,
 } from "react-native-reanimated";
 import { Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Colors from "@/constants/colors";
 
 const ONBOARDING_DATA = [
     {
@@ -22,21 +23,21 @@ const ONBOARDING_DATA = [
         title: "Every love deserves a beautiful story.",
         subtitle: "Plan every detail with ease and joy.",
         icon: "heart",
-        iconColor: "#F472B6", // pink-400
+        iconColor: Colors.roseDark, // Rose Dark
     },
     {
         id: "2",
         title: "Plan your big day effortlessly.",
         subtitle: "Manage timeline, budget, and vendors in one place.",
         icon: "calendar",
-        iconColor: "#FBBF24", // yellow-400 (gold)
+        iconColor: Colors.gold, // Gold
     },
     {
         id: "3",
         title: "Plan together with your partner.",
         subtitle: "Invite your fiancé and family to join the journey.",
         icon: "users",
-        iconColor: "#A78BFA", // purple-400
+        iconColor: Colors.dustyBlue, // Dusty Blue
     },
     {
         id: "4",
@@ -55,15 +56,21 @@ const ONBOARDING_DATA = [
 export default function OnboardingScreen() {
     const { width } = useWindowDimensions();
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     const flatListRef = useRef<FlatList>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handleNext = () => {
         if (currentIndex < ONBOARDING_DATA.length - 1) {
-            flatListRef.current?.scrollToIndex({
-                index: currentIndex + 1,
-                animated: true,
-            });
+            try {
+                flatListRef.current?.scrollToIndex({
+                    index: currentIndex + 1,
+                    animated: true,
+                });
+            } catch (error) {
+                // Ignore error if item is not rendered yet, shouldn't happen with our config
+                console.warn(error);
+            }
         } else {
             router.push("/(auth)/login" as any);
         }
@@ -91,7 +98,7 @@ export default function OnboardingScreen() {
                     {item.isTeaser ? (
                         <View style={styles.teaserContainer}>
                             <View style={styles.iconCircle}>
-                                <Feather name="layers" size={48} color="#F472B6" />
+                                <Feather name="layers" size={48} color={Colors.roseDark} />
                             </View>
                             <Text style={styles.title}>{item.title}</Text>
                             <View style={styles.featureList}>
@@ -100,7 +107,7 @@ export default function OnboardingScreen() {
                                         <Feather
                                             name={feature.icon as any}
                                             size={24}
-                                            color="#F472B6"
+                                            color={Colors.roseDark}
                                         />
                                         <Text style={styles.featureText}>{feature.text}</Text>
                                     </View>
@@ -135,9 +142,20 @@ export default function OnboardingScreen() {
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewConfig}
                 scrollEventThrottle={32}
+                getItemLayout={(_, index) => ({
+                    length: width,
+                    offset: width * index,
+                    index,
+                })}
+                onScrollToIndexFailed={(info) => {
+                    const wait = new Promise(resolve => setTimeout(resolve, 500));
+                    wait.then(() => {
+                        flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+                    });
+                }}
             />
 
-            <View style={styles.footer}>
+            <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom + 24, 48) }]}>
                 <View style={styles.paginationContainer}>
                     {ONBOARDING_DATA.map((_, i) => (
                         <View
@@ -179,7 +197,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FDF8F5", // Pastel rose / ivory base
+        backgroundColor: Colors.cream, // Pastel rose / ivory base
     },
     slide: {
         flex: 1,
@@ -211,7 +229,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: "PlayfairDisplay_600SemiBold",
         fontSize: 28,
-        color: "#2D3748",
+        color: Colors.charcoal,
         textAlign: "center",
         marginBottom: 16,
         lineHeight: 36,
@@ -219,7 +237,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontFamily: "Lora_400Regular",
         fontSize: 16,
-        color: "#718096",
+        color: Colors.warmGray,
         textAlign: "center",
         lineHeight: 24,
         paddingHorizontal: 20,
@@ -240,7 +258,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-        backgroundColor: "#FDF8F5",
+        backgroundColor: Colors.cream,
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 24,
@@ -264,8 +282,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        padding: 24,
-        paddingBottom: 48, // Safe area approximation
+        paddingHorizontal: 24,
+        paddingTop: 24,
     },
     paginationContainer: {
         flexDirection: "row",
@@ -280,11 +298,11 @@ const styles = StyleSheet.create({
     },
     activeDot: {
         width: 24,
-        backgroundColor: "#F472B6", // Pink 400
+        backgroundColor: Colors.roseDark, // Rose Dark
     },
     inactiveDot: {
         width: 8,
-        backgroundColor: "#E2E8F0", // Slate 200
+        backgroundColor: Colors.lightGray, // Slate 200
     },
     buttonContainer: {
         flexDirection: "row",
@@ -302,11 +320,11 @@ const styles = StyleSheet.create({
         color: "#A0AEC0",
     },
     nextButton: {
-        backgroundColor: "#F472B6",
+        backgroundColor: Colors.roseDark,
         paddingVertical: 14,
         paddingHorizontal: 32,
         borderRadius: 30,
-        shadowColor: "#F472B6",
+        shadowColor: Colors.roseDark,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
